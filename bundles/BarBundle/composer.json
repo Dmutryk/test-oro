@@ -1,0 +1,31 @@
+{
+  "name":              "dmytruk/bar-bundle",
+  "version":           "0.0.1",
+  "description":       "Bar bundle for testing purposes",
+  "type":              "symfony-bundle",
+  "license":           "MIT",
+  "authors": [
+    {
+      "name":     "Vasyl Dmytruk",
+      "email":    "dmytrukv@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1"
+  },        
+  "autoload": {
+    "psr-4": {
+      "BarBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Dmytruk\\BarBundle\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}
