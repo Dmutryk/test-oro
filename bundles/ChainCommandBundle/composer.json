@@ -1,0 +1,31 @@
+{
+  "name":              "dmytruk/chain-command-bundle",
+  "version":           "0.0.1",
+  "description":       "Chain command bundle",
+  "type":              "symfony-bundle",
+  "license":           "MIT",
+  "authors": [
+    {
+      "name":     "Vasyl Dmytruk",
+      "email":    "dmytrukv@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "ChainCommandBundle\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ChainCommandBundle\\Tests\\": "tests"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+services:
+  ChainCommandBundle\EventListener\CommandChainListener:
+    arguments:
+      $commandChainRegistry: '@ChainCommandBundle\CommandChainRegistry'
+      $logger: '@monolog.logger'
+    tags:
+      - { name: 'kernel.event_listener', event: 'console.command' }
+
+  ChainCommandBundle\CommandChainRegistry:
+    public: true
