@@ -51,8 +51,8 @@ class CommandChainingTest extends KernelTestCase
     public function testCommandChainingFailScenario()
     {
         $registry = new CommandChainRegistry();
+        $registry->registerCommandChain(FooHelloCommand::getDefaultName(), [BarHelloCommand::getDefaultName()]);
         $logger = new Logger('test');
-
         $listener = new CommandChainListener($registry, $logger);
         $dispatcher = self::getContainer()->get('event_dispatcher');
         $dispatcher->addSubscriber($listener);
@@ -62,7 +62,7 @@ class CommandChainingTest extends KernelTestCase
             new FooHelloCommand($logger),
             new BarHelloCommand($logger),
         ]);
-
+        
         $this->expectException(WrongChainCommandCallException::class);
         
         $input = new ArrayInput(['command' => 'bar:hello']);

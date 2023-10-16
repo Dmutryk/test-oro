@@ -20,14 +20,14 @@ class RegisterBarAsFooChainSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ConsoleEvents::class => 'onConsoleCommand',
         ];
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event)
+    public function onConsoleCommand(ConsoleCommandEvent $event): void
     {
         $this->logger->info(sprintf(
             '%s is a master command of a command chain that has registered member commands',

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ChainCommandBundle\EventListener;
 
 use ChainCommandBundle\CommandChainRegistry;
+use ChainCommandBundle\Exception\WrongChainCommandCallException;
 use Monolog\Logger;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -19,7 +20,7 @@ class CommandChainListener implements EventSubscriberInterface
     {
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event)
+    public function onConsoleCommand(ConsoleCommandEvent $event): void
     {
         $command = $event->getCommand();
         $commandName = $command->getName();
@@ -45,21 +46,17 @@ class CommandChainListener implements EventSubscriberInterface
         } else {
             $masterCommand = $this->commandChainRegistry->isCommandChained($command->getName());
             if (!is_null($masterCommand)) {
-                throw new \Exception(sprintf(
-                    '%s command is a member of %s command chain and cannot be executed on its own.',
-                    $command->getName(),
-                    $masterCommand
-                ));
+                throw new WrongChainCommandCallException($command->getName(), $masterCommand);
             }
         }
     }
 
-    private function executeCommand($command, $input, $output)
+    private function executeCommand($command, $input, $output): void
     {
         $command->run($input, $output);
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ConsoleEvents::COMMAND => 'onConsoleCommand',

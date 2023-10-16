@@ -16,21 +16,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 class BarHelloCommand extends Command
 {
-    public function __construct(string $name = null, private readonly Logger $logger)
+    public const MESSAGE = 'Hello from Bar!';
+    
+    public function __construct(private readonly Logger $logger, string $name = null)
     {
         parent::__construct($name);
     }
 
     protected function configure(): void
     {
-        $this->setDescription('Hello from Bar!');
+        $this->setDescription(self::MESSAGE);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $message = 'Hello from Bar!';
-        $output->writeln($message);
-        $this->logger->info($message);
+        $output->writeln(self::MESSAGE);
+        $this->logger->info(self::MESSAGE);
 
         return Command::SUCCESS;
     }

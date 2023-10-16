@@ -8,44 +8,37 @@ use ChainCommandBundle\CommandChainRegistry;
 use FooBundle\Command\FooHelloCommand;
 use PHPUnit\Framework\TestCase;
 
-/** FooHelloCommand and BarHelloCommand should be here, but I used them to speed up test task implementation */
+/** FooHelloCommand and BarHelloCommand should not be here, but I used them to speed up test task implementation */
 class CommandChainRegistryTest extends TestCase
 {
     public function testRegisterCommandChain()
     {
-        // Create an instance of CommandChainRegistry
         $registry = new CommandChainRegistry();
+        $masterCommand = $this->createMock(ChainCommand::class);
+        $masterCommand->method('getName')->willReturn('master:hello');
+        $chainedCommand = $this->createMock(ChainCommand::class);
+        $chainedCommand->method('getName')->willReturn('chained:hello');
 
-        // Register a command chain
-        $registry->registerCommandChain(FooHelloCommand::getDefaultName(), [BarHelloCommand::getDefaultName()]);
-
-        // Assert that the command chain is registered correctly
-        $this->assertTrue($registry->isCommandInChain(BarHelloCommand::getDefaultName()));
-        $this->assertEquals([BarHelloCommand::getDefaultName()], $registry->getChainedCommands(FooHelloCommand::getDefaultName()));
+        $registry->registerCommandChain($masterCommand->getName(), [$chainedCommand->getName()]);
+        
+        $this->assertTrue($registry->isCommandInChain($masterCommand->getName()));
+        $this->assertEquals([$chainedCommand->getName()], $registry->getChainedCommands($masterCommand->getName()));
     }
 
-    public function testIsCommandInChain()
+    public function testIsCommandChained()
     {
-        // Create an instance of CommandChainRegistry
         $registry = new CommandChainRegistry();
-
-        // Register a command chain
         $registry->registerCommandChain(FooHelloCommand::getDefaultName(), [BarHelloCommand::getDefaultName()]);
-
-        // Check if a command is in the chain
-        $this->assertTrue($registry->isCommandInChain(BarHelloCommand::getDefaultName()));
-        $this->assertFalse($registry->isCommandInChain(ChainCommand::getDefaultName()));
+        
+        $this->assertNotNull($registry->isCommandChained(BarHelloCommand::getDefaultName()));
+        $this->assertNull($registry->isCommandChained(ChainCommand::getDefaultName()));
     }
 
     public function testGetChainedCommands()
     {
-        // Create an instance of CommandChainRegistry
         $registry = new CommandChainRegistry();
-
-        // Register a command chain
         $registry->registerCommandChain(FooHelloCommand::getDefaultName(), [BarHelloCommand::getDefaultName()]);
 
-        // Get the chained commands
         $this->assertEquals([BarHelloCommand::getDefaultName()], $registry->getChainedCommands(FooHelloCommand::getDefaultName()));
         $this->assertEquals([], $registry->getChainedCommands(ChainCommand::getDefaultName()));
     }

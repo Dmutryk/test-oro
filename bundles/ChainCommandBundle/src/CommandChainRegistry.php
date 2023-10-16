@@ -15,10 +15,8 @@ class CommandChainRegistry
 
     public function isCommandInChain(string $commandName): bool
     {
-        foreach ($this->commandChains as $masterCommand => $chainedCommands) {
-            if ($masterCommand === $commandName) {
-                return true;
-            }
+        if (array_key_exists($commandName, $this->commandChains)) {
+            return true;
         }
 
         return false;
@@ -27,8 +25,10 @@ class CommandChainRegistry
     public function isCommandChained(string $commandName): ?string
     {
         foreach ($this->commandChains as $masterCommand => $chainedCommands) {
-            if (in_array($commandName, $chainedCommands, true)) {
-                return $masterCommand;
+            foreach ($chainedCommands as $chainedCommand) {
+                if ($chainedCommand === $commandName) {
+                    return $masterCommand;
+                }
             }
         }
 
